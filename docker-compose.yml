@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+
+  postfix:
+    build: postfix/
+    networks:
+    - mail
+
+  dovecot:
+    build: dovecot/
+    networks:
+    - mail
+
+  client:
+    build: client/
+    networks:
+    - mail
+
+networks:
+  mail:

@@ -1,0 +1,19 @@
+# http://www.postfix.org/COMPATIBILITY_README.html
+compatibility_level = 2
+
+maillog_file=/dev/stdout
+
+# fixes "(Host or domain name not found. Name service error for name=dovecot type=AAAA: Host not found, try again)" in postqueue -p
+# AAAA indicates an ipv6 lookup failure, so force ipv4
+inet_protocols = ipv4
+
+# Connect to dovecot
+# virtual_transport set to lmtp:dovecot:24 is causing "(Host or domain name not found. Name service error for name=dovecot type=A: Host not found, try again)"
+# It works when we fill in the IP address of the dovecot service here, which is usually 172.21.0.3. Why does it not work on the docker network alias?
+virtual_transport = lmtp:dovecot:24
+mailbox_transport = lmtp:dovecot:24
+
+# https://www.postfix.org/VIRTUAL_README.html#in_virtual_other
+# Non-Postfix mailbox store (dovecot): separate domains, non-UNIX accounts
+virtual_mailbox_domains = domain.my
+virtual_mailbox_maps = hash:/etc/postfix/vmailbox
